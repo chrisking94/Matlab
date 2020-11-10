@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Matlab", "Matlab\Matlab.csproj", "{60EBAFEE-B4FA-47EE-85E3-6CE78CC1505C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Numerics", "..\mathnet-numerics-master\src\Numerics\Numerics.csproj", "{EA7A010B-B1E4-4ED6-87FA-4941D3B87402}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{60EBAFEE-B4FA-47EE-85E3-6CE78CC1505C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60EBAFEE-B4FA-47EE-85E3-6CE78CC1505C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60EBAFEE-B4FA-47EE-85E3-6CE78CC1505C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA7A010B-B1E4-4ED6-87FA-4941D3B87402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA7A010B-B1E4-4ED6-87FA-4941D3B87402}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA7A010B-B1E4-4ED6-87FA-4941D3B87402}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA7A010B-B1E4-4ED6-87FA-4941D3B87402}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

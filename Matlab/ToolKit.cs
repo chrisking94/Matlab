@@ -244,17 +244,6 @@ namespace Matlab
             var vec = VectorC.Build.Dense(n);
             return vec;
         }
-
-        /// <summary>
-        /// Create a column vector with given items.
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns></returns>
-        public static VectorC vector(params double[] items)
-        {
-            var vec = VectorC.Build.Dense(items);
-            return vec;
-        }
         #endregion
 
         #region Other utils

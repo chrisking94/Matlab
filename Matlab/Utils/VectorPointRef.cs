@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using Matlab.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +8,17 @@ using System.Threading.Tasks;
 
 namespace Matlab.Utils
 {
-    public class VectorPointRef
+    public struct VectorPointRef<TMathNetVec, TConcreteVec> 
+        where TMathNetVec : Vector<double>
+        where TConcreteVec : VectorBase<TMathNetVec, TConcreteVec>
     {
         public double Val
         {
-            get => this.vec[i];
-            set => this.vec[i] = value;
+            get => this.vec.Vec[i];
+            set => this.vec.Vec[i] = value;
         }
 
-        private readonly IList<double> vec;
+        private readonly VectorBase<TMathNetVec, TConcreteVec> vec;
 
         private readonly int i;
 
@@ -24,13 +27,13 @@ namespace Matlab.Utils
         /// </summary>
         /// <param name="vec"></param>
         /// <param name="i">matlab index, starts from 1</param>
-        public VectorPointRef(IList<double> vec, int i)
+        internal VectorPointRef(VectorBase<TMathNetVec, TConcreteVec> vec, int i)
         {
             this.vec = vec;
             this.i = i - 1;
         }
 
-        public static implicit operator double(VectorPointRef vpr)
+        public static implicit operator double(VectorPointRef<TMathNetVec, TConcreteVec> vpr)
         {
             return vpr.Val;
         }

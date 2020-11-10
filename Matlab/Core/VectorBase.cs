@@ -13,8 +13,8 @@ namespace Matlab.Core
     /// </summary>
     /// <typeparam name="TMathNetVec"></typeparam>
     /// <typeparam name="TConcreteVec">VectorR or VectorRow</typeparam>
-    public abstract class VectorBase<TMathNetVec, TConcreteVec> 
-        where TMathNetVec : IList<double>
+    public abstract class VectorBase<TMathNetVec, TConcreteVec>
+        where TMathNetVec : Vector<double>
         where TConcreteVec : VectorBase<TMathNetVec, TConcreteVec>
     {
         public int Count => this.vec.Count;
@@ -22,6 +22,8 @@ namespace Matlab.Core
         internal TMathNetVec Vec => this.vec;
 
         protected readonly TMathNetVec vec;
+
+        protected abstract VectorBuilderBase<TConcreteVec> build { get; }
 
         protected VectorBase(TMathNetVec vec)
         {
@@ -35,14 +37,14 @@ namespace Matlab.Core
         /// <param name="vec"></param>
         /// <param name="i">matlab index, starts from 1</param>
         /// <returns></returns>
-        public VectorPointRef @ref(int i)
+        public VectorPointRef<TMathNetVec, TConcreteVec> @ref(int i)
         {
-            return new VectorPointRef(vec, i);
+            return new VectorPointRef<TMathNetVec, TConcreteVec>(this, i);
         }
 
-        public VectorScatterRef @ref(IEnumerable<double> indices)
+        public VectorScatterRef<TMathNetVec, TConcreteVec> @ref(IEnumerable<double> indices)
         {
-            return new VectorScatterRef(vec, indices);
+            return new VectorScatterRef<TMathNetVec, TConcreteVec>(this, indices);
         }
         #endregion
 
@@ -75,24 +77,77 @@ namespace Matlab.Core
         /// <param name="vec"></param>
         /// <param name="other"></param>
         /// <returns></returns>
-        public abstract TConcreteVec MDP(TConcreteVec other);
-
-        /// <summary>
-        /// Matlab [.*].
-        /// </summary>
-        /// <param name="vec"></param>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public TConcreteVec MDP(TConcreteVec vec, double val)
+        public TConcreteVec MDP(TConcreteVec other)
         {
-            var resVals = vec.PointWiseApply(d => d * val, true);
+            return this.build.CreateMatlabVector(this.vec.PointwiseMultiply(other.vec));
+        }
 
-            return this.CreateConcreteVector(resVals);
+        public static TConcreteVec operator +(VectorBase<TMathNetVec, TConcreteVec> vec1, double value)
+        {
+            return vec1.build.CreateMatlabVector(vec1.vec + value);
+        }
+
+        public static TConcreteVec operator +(double value, VectorBase<TMathNetVec, TConcreteVec> vec1)
+        {
+            return vec1.build.CreateMatlabVector(value + vec1.vec);
+        }
+
+        public static TConcreteVec operator +(VectorBase<TMathNetVec, TConcreteVec> vec1, VectorBase<TMathNetVec, TConcreteVec> vec2)
+        {
+            return vec1.build.CreateMatlabVector(vec1.vec + vec2.vec);
+        }
+
+        public static TConcreteVec operator -(VectorBase<TMathNetVec, TConcreteVec> vec1, double value)
+        {
+            return vec1.build.CreateMatlabVector(vec1.vec - value);
+        }
+
+        public static TConcreteVec operator -(double value, VectorBase<TMathNetVec, TConcreteVec> vec1)
+        {
+            return vec1.build.CreateMatlabVector(value - vec1.vec);
+        }
+
+        public static TConcreteVec operator -(VectorBase<TMathNetVec, TConcreteVec> vec1, VectorBase<TMathNetVec, TConcreteVec> vec2)
+        {
+            return vec1.build.CreateMatlabVector(vec1.vec - vec2.vec);
+        }
+
+        public static TConcreteVec operator *(VectorBase<TMathNetVec, TConcreteVec> vec1, double value)
+        {
+            return vec1.build.CreateMatlabVector(vec1.vec * value);
+        }
+
+        public static TConcreteVec operator *(double value, VectorBase<TMathNetVec, TConcreteVec> vec1)
+        {
+            return vec1.build.CreateMatlabVector(value * vec1.vec);
+        }
+
+        public static TConcreteVec operator /(VectorBase<TMathNetVec, TConcreteVec> vec1, double value)
+        {
+            return vec1.build.CreateMatlabVector(vec1.vec / value);
+        }
+
+        public static TConcreteVec operator /(double value, VectorBase<TMathNetVec, TConcreteVec> vec1)
+        {
+            return vec1.build.CreateMatlabVector(value / vec1.vec);
+        }
+
+        public static TConcreteVec operator %(VectorBase<TMathNetVec, TConcreteVec> vec1, double value)
+        {
+            return vec1.build.CreateMatlabVector(vec1.vec % value);
+        }
+
+        public static TConcreteVec operator %(double value, VectorBase<TMathNetVec, TConcreteVec> vec1)
+        {
+            return vec1.build.CreateMatlabVector(value % vec1.vec);
         }
         #endregion
 
         #region Private Utils
-        protected abstract TConcreteVec CreateConcreteVector(double[] vals);
+        internal TConcreteVec CreateConcreteVector(double[] vals)
+        {
+            return this.build.BuildLike(vals, this as TConcreteVec);
+        }
 
         /// <summary>
         /// Apply <paramref name="pointCalcFunc"/> to each point.

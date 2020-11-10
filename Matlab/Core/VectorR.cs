@@ -22,6 +22,8 @@ namespace Matlab.Core
 
         public VectorC Transpose => VectorC.Build.DenseOfVector(this.vec);
 
+        protected override VectorBuilderBase<VectorR> build => Build;
+
         internal VectorR(Matrix<double> mat) : base(mat.Row(0))
         {
             if (mat.RowCount != 1) throw new Exception($"'{nameof(mat)}' is not a row vector.");
@@ -32,27 +34,18 @@ namespace Matlab.Core
         }
 
         #region Operators
-        public override VectorR MDP(VectorR other)
-        {
-            return new VectorR(this.vec.PointwiseMultiply(other.vec));
-        }
-
-        public static VectorR operator -(VectorR opr1, double d)
-        {
-            return new VectorR(opr1.vec - d);
-        }
-
         public static implicit operator VectorR(Vector<double> vec)
         {
             return new VectorR(vec);
         }
+
+        public static double operator *(VectorR vec1, VectorC vec2)
+        {
+            return vec1.vec * vec2.Vec;
+        }
         #endregion
 
         #region Private Utils
-        protected override VectorR CreateConcreteVector(double[] vals)
-        {
-            return Build.BuildLike(vals, this);
-        }
         #endregion
     }
 }

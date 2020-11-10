@@ -1,5 +1,6 @@
 ﻿using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
+using Matlab.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +13,24 @@ namespace Matlab.Utils
     /// <summary>
     /// Scatter reference.
     /// </summary>
-    public class VectorScatterRef
+    public struct VectorScatterRef<TMathNetVec, TConcreteVec>
+        where TMathNetVec : Vector<double>
+        where TConcreteVec : VectorBase<TMathNetVec, TConcreteVec>
     {
-        public Vector<double> Val
+        public TConcreteVec Val
         {
-            get => Vector<double>.Build.DenseOfEnumerable(this.indices.Select(i => this.vec[i]));
+            get
+            {
+                var vec = this.vec;
+                return this.vec.CreateConcreteVector(this.indices.Select(i => vec.Vec[i]).ToArray());
+            }
             set
             {
                 // Check.
                 if (value.Count != this.indices.Length) throw new Exception();
                 for(var i = 0; i < this.indices.Length; ++i)
                 {
-                    this.vec[indices[i]] = value[i];
+                    this.vec.Vec[indices[i]] = value.Vec[i];
                 }
             }
         }
@@ -34,12 +41,12 @@ namespace Matlab.Utils
             {
                 for (var i = 0; i < this.indices.Length; ++i)
                 {
-                    this.vec[indices[i]] = value;
+                    this.vec.Vec[indices[i]] = value;
                 }
             }
         }
 
-        private readonly IList<double> vec;
+        private readonly VectorBase<TMathNetVec, TConcreteVec> vec;
 
         private readonly int[] indices;
 
@@ -48,7 +55,7 @@ namespace Matlab.Utils
         /// </summary>
         /// <param name="vec"></param>
         /// <param name="indices"></param>
-        public VectorScatterRef(IList<double> vec, IEnumerable<double> indices)
+        public VectorScatterRef(VectorBase<TMathNetVec, TConcreteVec> vec, IEnumerable<double> indices)
         {
             // Check
             NumericTool.CheckIndices(indices);

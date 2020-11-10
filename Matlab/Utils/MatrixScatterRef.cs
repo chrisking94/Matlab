@@ -1,23 +1,28 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathNet.Numerics.LinearAlgebra;
+using Matlab.Core;
 
 namespace Matlab.Utils
 {
     /// <summary>
     /// Refer matrix by a list of indices.
     /// </summary>
-    public class MatrixScatterRef
+    public struct MatrixScatterRef
     {
         /// <summary>
         /// A column vector.
         /// </summary>
-        public Matrix<double> Val
+        public Matrix Val
         {
-            get => Matrix<double>.Build.DenseOfColumnArrays(this.indices.Select(i => mat[i % mat.RowCount, i / mat.RowCount]).ToArray());
+            get
+            {
+                var mat = this.mat;
+                return Matrix.Build.DenseOfColumnArrays(this.indices.Select(i => mat.Mat[i % mat.RowCount, i / mat.RowCount]).ToArray());
+            }
             set
             {
                 // Check.
@@ -25,24 +30,28 @@ namespace Matlab.Utils
                 for(var k = 0; k < indices.Count; ++k)
                 {
                     var i = indices[k];
-                    mat[i % mat.RowCount, i / mat.RowCount] = value[k, 0];
+                    mat.Mat[i % mat.RowCount, i / mat.RowCount] = value.Mat[k, 0];
                 }
             }
         }
 
         public double FillVal
         {
-            set => this.indices.ForEach(i => mat[i % mat.RowCount, i / mat.RowCount] = value);
+            set
+            {
+                var mat = this.mat;
+                this.indices.ForEach(i => mat.Mat[i % mat.RowCount, i / mat.RowCount] = value);
+            }
         }
 
-        private readonly Matrix<double> mat;
+        private readonly Matrix mat;
 
         /// <summary>
         /// See <see cref="https://www.mathworks.com/company/newsletters/articles/matrix-indexing-in-matlab.html?s_tid=srchtitle"/> Linear Indexing.
         /// </summary>
         private readonly List<int> indices;
 
-        public MatrixScatterRef(Matrix<double> mat, Matrix<double> scatterMat)
+        internal MatrixScatterRef(Matrix mat, Matrix scatterMat)
         {
             // Check dimension.
             if (mat.RowCount != scatterMat.RowCount || mat.ColumnCount != scatterMat.ColumnCount) throw new Exception("Invalid scatter matrix.");
@@ -53,7 +62,7 @@ namespace Matlab.Utils
             {
                 for (var i = 0; i < scatterMat.RowCount; ++i)
                 {
-                    var scatterVal = scatterMat[i, j];
+                    var scatterVal = scatterMat.Mat[i, j];
                     if (scatterVal == 0)
                     {
                         // Pass.
@@ -74,7 +83,7 @@ namespace Matlab.Utils
         /// Cast to a column vector.
         /// </summary>
         /// <param name="scatterRef"></param>
-        public static implicit operator Matrix<double>(MatrixScatterRef scatterRef)
+        public static implicit operator Matrix(MatrixScatterRef scatterRef)
         {
             return scatterRef.Val;
         }

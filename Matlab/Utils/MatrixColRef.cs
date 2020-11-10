@@ -1,20 +1,21 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using Matlab.Core;
 using Matlab.Utils;
 
 namespace Matlab.Utils
 {
-    public class MatrixColRef
+    public struct MatrixColRef
     {
         /// <summary>
         /// Column vector.
         /// </summary>
-        public Vector<double> Val
+        public VectorC Val
         {
-            get => this.mat.Column(iCol);
-            set => this.mat.SetColumn(iCol, value);
+            get => this.mat.Mat.Column(iCol);
+            set => this.mat.Mat.SetColumn(iCol, value.Vec);
         }
 
-        private readonly Matrix<double> mat;
+        private readonly Matrix mat;
 
         private readonly int iCol;
 
@@ -23,7 +24,7 @@ namespace Matlab.Utils
         /// </summary>
         /// <param name="mat"></param>
         /// <param name="iCol"></param>
-        public MatrixColRef(Matrix<double> mat, int iCol)
+        internal MatrixColRef(Matrix mat, int iCol)
         {
             this.mat = mat;
             this.iCol = iCol - 1;

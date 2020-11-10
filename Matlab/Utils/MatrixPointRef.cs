@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Matlab.Core;
 
 namespace Matlab.Utils
 {
-    public class MatrixPointRef
+    public struct MatrixPointRef
     {
         public double Val
         {
-            get => this.mat[iRow, iCol];
-            set => this.mat[iRow, iCol] = value;
+            get => this.mat.Mat[iRow, iCol];
+            set => this.mat.Mat[iRow, iCol] = value;
         }
 
-        private readonly Matrix<double> mat;
+        private readonly Matrix mat;
 
         private readonly int iRow;
 
@@ -27,7 +28,7 @@ namespace Matlab.Utils
         /// <param name="mat"></param>
         /// <param name="iRow">matlab index, starts from 1</param>
         /// <param name="iCol">matlab index, starts from 1</param>
-        public MatrixPointRef(Matrix<double> mat, int iRow, int iCol)
+        internal MatrixPointRef(Matrix mat, int iRow, int iCol)
         {
             this.mat = mat;
             this.iRow = iRow - 1;

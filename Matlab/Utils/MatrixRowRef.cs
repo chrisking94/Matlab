@@ -9,7 +9,7 @@ using Matlab.Core;
 
 namespace Matlab.Utils
 {
-    public class MatrixRowRef
+    public struct MatrixRowRef
     {
         /// <summary>
         /// Fill row with given value.
@@ -21,7 +21,7 @@ namespace Matlab.Utils
             {
                 for (var j = 0; j < mat.ColumnCount; ++j)
                 {
-                    this.mat[iRow, j] = value;
+                    this.mat.Mat[iRow, j] = value;
                 }
             }
         }
@@ -32,36 +32,32 @@ namespace Matlab.Utils
         /// <param name="source"></param>
         public VectorR Val
         {
-            get
-            {
-                var vec = VectorR.Build.Dense(mat.Row(iRow));
-                return vec;
-            }
+            get => mat.Mat.Row(iRow);
             set
             {
                 if (this.mat.ColumnCount != value.Count) throw new Exception();
-                this.mat.SetRow(iRow, value.Transpose.Vec);
+                this.mat.Mat.SetRow(iRow, value.Vec);
             }
         }
 
         /// <summary>
-        /// Available only when the matrix has 1 single column.
+        /// Available only when the matrix has 1 element.
         /// </summary>
-        public double RowVal
+        public double SingleVal
         {
             get
             {
                 if (this.mat.ColumnCount != 1) throw new Exception();
-                return this.mat[iRow, 0];
+                return this.mat.Mat[iRow, 0];
             }
             set
             {
                 if (this.mat.ColumnCount != 1) throw new Exception();
-                this.mat[iRow, 0] = value;
+                this.mat.Mat[iRow, 0] = value;
             }
         }
 
-        private readonly Matrix<double> mat;
+        private readonly Matrix mat;
 
         private readonly int iRow;
 
@@ -70,7 +66,7 @@ namespace Matlab.Utils
         /// </summary>
         /// <param name="mat"></param>
         /// <param name="iRow">matlab index, starts from 1</param>
-        public MatrixRowRef(Matrix<double> mat, int iRow)
+        internal MatrixRowRef(Matrix mat, int iRow)
         {
             this.mat = mat;
             this.iRow = iRow - 1;  // The index in matlab matrix starts from '1'.

@@ -31,5 +31,10 @@ namespace Matlab.Core.Builders
         {
             return new VectorR(vec);
         }
+
+        internal override VectorR CreateMatlabVector(Vector<double> vec)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

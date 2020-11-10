@@ -32,5 +32,10 @@ namespace Matlab.Core.Builders
         {
             return new VectorC(Vector<double>.Build.Dense(items));
         }
+
+        internal override VectorC CreateMatlabVector(Vector<double> vec)
+        {
+            return new VectorC(vec);
+        }
     }
 }

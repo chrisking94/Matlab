@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\mathnet-numerics-master\src\Numerics\Numerics.csproj" />
+    <PackageReference Include="MathNet.Numerics" Version="4.12.0" />
   </ItemGroup>
 
 </Project>

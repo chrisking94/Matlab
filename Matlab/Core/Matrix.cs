@@ -17,6 +17,10 @@ namespace Matlab.Core
 
         internal Matrix<double> Mat => this.mat;
 
+        public int RowCount => this.mat.RowCount;
+
+        public int ColumnCount => this.mat.ColumnCount;
+
         private readonly Matrix<double> mat;
 
         public Matrix(Matrix<double> mat)
@@ -26,7 +30,7 @@ namespace Matlab.Core
 
         public MatrixPointRef @ref(int iRow, int iCol)
         {
-            return new MatrixPointRef(mat, iRow, iCol);
+            return new MatrixPointRef(this, iRow, iCol);
         }
 
         /// <summary>
@@ -38,7 +42,7 @@ namespace Matlab.Core
         public MatrixPointRef @ref(int iRow)
         {
             if (mat.ColumnCount != 1) throw new Exception($"'{nameof(mat)}' is not a column vector");
-            return new MatrixPointRef(mat, iRow, 1);
+            return new MatrixPointRef(this, iRow, 1);
         }
 
         /// <summary>
@@ -51,13 +55,13 @@ namespace Matlab.Core
         public MatrixRowRef @ref(int iRow, char colRep)
         {
             if (colRep != ':') throw new Exception($"{nameof(colRep)} should be ':' constantly.");
-            return new MatrixRowRef(mat, iRow);
+            return new MatrixRowRef(this, iRow);
         }
 
         public MatrixColRef @ref(char colRep, int iCol)
         {
             if (colRep != ':') throw new Exception($"{nameof(colRep)} should be ':' constantly.");
-            return new MatrixColRef(mat, iCol);
+            return new MatrixColRef(this, iCol);
         }
 
         /// <summary>
@@ -69,7 +73,7 @@ namespace Matlab.Core
         /// <returns></returns>
         public MatrixSliceRef @ref(ValueTuple<int, int> rowSlice, ValueTuple<int, int> colSlice)
         {
-            return new MatrixSliceRef(mat, rowSlice, colSlice);
+            return new MatrixSliceRef(this, rowSlice, colSlice);
         }
 
         /// <summary>
@@ -81,7 +85,7 @@ namespace Matlab.Core
         /// <returns></returns>
         public MatrixSliceRef @ref(int row, ValueTuple<int, int> colSlice)
         {
-            return new MatrixSliceRef(mat, (row, row), colSlice);
+            return new MatrixSliceRef(this, (row, row), colSlice);
         }
 
         /// <summary>
@@ -93,7 +97,7 @@ namespace Matlab.Core
         /// <returns></returns>
         public MatrixSliceRef @ref(IEnumerable<double> rowIndices, IEnumerable<double> colIndices)
         {
-            return new MatrixSliceRef(mat, rowIndices, colIndices);
+            return new MatrixSliceRef(this, rowIndices, colIndices);
         }
 
         /// <summary>
@@ -106,7 +110,7 @@ namespace Matlab.Core
         public MatrixSliceRef @ref(IEnumerable<double> rowIndices, char colRep)
         {
             if (colRep != ':') throw new Exception($"'{nameof(colRep)}' should be ':' constantly");
-            return new MatrixSliceRef(mat, rowIndices, Enumerable.Range(1, mat.ColumnCount).Select(i => (double)i));
+            return new MatrixSliceRef(this, rowIndices, Enumerable.Range(1, mat.ColumnCount).Select(i => (double)i));
         }
 
         /// <summary>
@@ -119,7 +123,7 @@ namespace Matlab.Core
         public MatrixSliceRef @ref(char rowRep, IEnumerable<double> colIndices)
         {
             if (rowRep != ':') throw new Exception($"'{nameof(rowRep)}' should be ':' constantly");
-            return new MatrixSliceRef(mat, Enumerable.Range(1, mat.RowCount).Select(i => (double)i), colIndices);
+            return new MatrixSliceRef(this, Enumerable.Range(1, mat.RowCount).Select(i => (double)i), colIndices);
         }
 
         /// <summary>
@@ -130,7 +134,7 @@ namespace Matlab.Core
         /// <returns></returns>
         public MatrixScatterRef @ref(Matrix<double> scatterMatrix)
         {
-            return new MatrixScatterRef(mat, scatterMatrix);
+            return new MatrixScatterRef(this, scatterMatrix);
         }
 
         /// <summary>
@@ -240,6 +244,51 @@ namespace Matlab.Core
             return mat.PointWiseApply(d => d != value ? 1 : 0, true);
         }
 
+        public static Matrix operator +(Matrix mat, double value)
+        {
+            return mat.mat + value;
+        }
+
+        public static Matrix operator +(Matrix mat1, Matrix mat2)
+        {
+            return mat1.mat + mat2.mat;
+        }
+
+        public static Matrix operator -(Matrix mat, double value)
+        {
+            return mat.mat - value;
+        }
+
+        public static Matrix operator -(Matrix mat1, Matrix mat2)
+        {
+            return mat1.mat - mat2.mat;
+        }
+
+        public static Matrix operator *(Matrix mat, double value)
+        {
+            return mat.mat * value;
+        }
+
+        public static VectorC operator *(Matrix mat, VectorC vec)
+        {
+            return mat.mat * vec.Vec;
+        }
+
+        public static VectorR operator *(Matrix mat, VectorR vec)
+        {
+            return mat.ColumnWiseApply(col => col * vec.Vec);
+        }
+
+        public static Matrix operator /(Matrix mat, double value)
+        {
+            return mat.mat / value;
+        }
+
+        public static Matrix operator %(Matrix mat, double value)
+        {
+            return mat.mat % value;
+        }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -253,6 +302,16 @@ namespace Matlab.Core
         public static implicit operator Matrix(Matrix<double> mat)
         {
             return new Matrix(mat);
+        }
+
+        public static implicit operator VectorC(Matrix mat)
+        {
+            return mat.ToColumnVector();
+        }
+
+        public static implicit operator VectorR(Matrix mat)
+        {
+            return mat.ToRowVector();
         }
         #endregion
     }

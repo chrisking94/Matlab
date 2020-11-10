@@ -13,24 +13,17 @@ namespace Matlab.Core
     {
         public static readonly ColumnVectorBuilder Build = new ColumnVectorBuilder();
 
+        protected override VectorBuilderBase<VectorC> build => Build;
+
         public VectorC(Vector<double> vec) : base(vec)
         {
 
         }
-
-        public override VectorC MDP(VectorC other)
-        {
-            return new VectorC(this.vec.PointwiseMultiply(other.vec));
-        }
-
+        #region Operators
         public static implicit operator VectorC(Vector<double> vec)
         {
             return new VectorC(vec);
         }
-
-        protected override VectorC CreateConcreteVector(double[] vals)
-        {
-            return Build.BuildLike(vals, this);
-        }
+        #endregion
     }
 }

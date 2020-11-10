@@ -11,20 +11,20 @@ namespace Matlab.Utils
     /// <summary>
     /// Referenced by slices.
     /// </summary>
-    public class MatrixSliceRef
+    public struct MatrixSliceRef
     {
-        public Matrix<double> Val
+        public Matrix Val
         {
             get
             {
-                var val = Matrix<double>.Build.Dense(this.rowIndices.Length, this.colIndices.Length);
+                var val = Matrix.Build.Dense(this.rowIndices.Length, this.colIndices.Length);
                 for(var i = 0; i < this.rowIndices.Length; ++i)
                 {
                     var rowIndex = this.rowIndices[i];
                     for(var j = 0; j < this.colIndices.Length; ++j)
                     {
                         var colIndex = this.colIndices[j];
-                        val[i, j] = this.mat[rowIndex, colIndex];
+                        val.Mat[i, j] = this.mat.Mat[rowIndex, colIndex];
                     }
                 }
                 return val;
@@ -40,7 +40,7 @@ namespace Matlab.Utils
                     for (var j = 0; j < this.colIndices.Length; ++j)
                     {
                         var colIndex = this.colIndices[j];
-                        this.mat[rowIndex, colIndex] = value[i, j];
+                        this.mat.Mat[rowIndex, colIndex] = value.Mat[i, j];
                     }
                 }
             }
@@ -61,26 +61,26 @@ namespace Matlab.Utils
                     for (var k = 0; k < this.colIndices.Length; ++k)
                     {
                         var j = this.colIndices[k];
-                        this.mat[i, j] = value.Vec[k];
+                        this.mat.Mat[i, j] = value.Vec[k];
                     }
                 }
             }
         }
 
-        private readonly Matrix<double> mat;
+        private readonly Matrix mat;
 
         private readonly int[] rowIndices;
 
         private readonly int[] colIndices;
 
-        public MatrixSliceRef(Matrix<double> mat, ValueTuple<int, int> rowSlice, ValueTuple<int, int> colSlice)
+        internal MatrixSliceRef(Matrix mat, ValueTuple<int, int> rowSlice, ValueTuple<int, int> colSlice)
         {
             this.mat = mat;
             this.rowIndices = Enumerable.Range(rowSlice.Item1 - 1, rowSlice.Item2 - rowSlice.Item1 + 1).ToArray();
             this.colIndices = Enumerable.Range(colSlice.Item1 - 1, colSlice.Item2 - colSlice.Item1 + 1).ToArray();
         }
 
-        public MatrixSliceRef(Matrix<double> mat, IEnumerable<double> rowIndices, IEnumerable<double> colIndices)
+        internal MatrixSliceRef(Matrix mat, IEnumerable<double> rowIndices, IEnumerable<double> colIndices)
         {
             // Check.
             NumericTool.CheckIndices(rowIndices);
@@ -90,7 +90,7 @@ namespace Matlab.Utils
             this.colIndices = colIndices.Select(d => (int)d - 1).ToArray();
         }
 
-        public static implicit operator Matrix<double>(MatrixSliceRef sliceRef)
+        public static implicit operator Matrix(MatrixSliceRef sliceRef)
         {
             return sliceRef.Val;
         }
