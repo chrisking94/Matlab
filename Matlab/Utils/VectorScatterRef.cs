@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Matlab.Utils
 {
     /// <summary>
-    /// Scatter reference.
+    /// Scatter reference to a vector.
     /// </summary>
     public struct VectorScatterRef<TMathNetVec, TConcreteVec>
         where TMathNetVec : Vector<double>

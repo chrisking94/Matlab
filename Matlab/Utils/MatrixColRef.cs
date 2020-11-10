@@ -4,6 +4,9 @@ using Matlab.Utils;
 
 namespace Matlab.Utils
 {
+    /// <summary>
+    /// Reference to a matrix column.
+    /// </summary>
     public struct MatrixColRef
     {
         /// <summary>

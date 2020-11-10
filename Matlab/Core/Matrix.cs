@@ -28,6 +28,12 @@ namespace Matlab.Core
             this.mat = mat;
         }
 
+        /// <summary>
+        /// Get a reference at the given <paramref name="iRow"/> and <paramref name="iCol"/> in this matrix.
+        /// </summary>
+        /// <param name="iRow"></param>
+        /// <param name="iCol"></param>
+        /// <returns></returns>
         public MatrixPointRef @ref(int iRow, int iCol)
         {
             return new MatrixPointRef(this, iRow, iCol);
@@ -58,6 +64,12 @@ namespace Matlab.Core
             return new MatrixRowRef(this, iRow);
         }
 
+        /// <summary>
+        /// Get column reference.
+        /// </summary>
+        /// <param name="colRep"></param>
+        /// <param name="iCol"></param>
+        /// <returns></returns>
         public MatrixColRef @ref(char colRep, int iCol)
         {
             if (colRep != ':') throw new Exception($"{nameof(colRep)} should be ':' constantly.");

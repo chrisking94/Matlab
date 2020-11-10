@@ -9,6 +9,9 @@ using Matlab.Core;
 
 namespace Matlab.Utils
 {
+    /// <summary>
+    /// Reference to a matrix row.
+    /// </summary>
     public struct MatrixRowRef
     {
         /// <summary>

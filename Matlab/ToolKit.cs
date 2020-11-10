@@ -12,6 +12,10 @@ using Matlab.Core;
 
 namespace Matlab
 {
+    /// <summary>
+    /// Provide functions in C# way corresponding to MATLAB ones.
+    /// <para>You might use this ToolKit by code: <code>using static Matlab.ToolKit;</code></para>
+    /// </summary>
     public static class ToolKit
     {
         #region Basic math tools
@@ -257,9 +261,9 @@ namespace Matlab
             Console.WriteLine(format);
         }
 
-        public static void disp(object vecR)
+        public static void disp(object obj)
         {
-            Console.WriteLine(vecR);
+            Console.WriteLine(obj);
         }
         #endregion
     }

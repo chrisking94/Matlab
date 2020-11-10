@@ -42,6 +42,11 @@ namespace Matlab.Core
             return new VectorPointRef<TMathNetVec, TConcreteVec>(this, i);
         }
 
+        /// <summary>
+        /// Get a reference by given <paramref name="indices"/>.
+        /// </summary>
+        /// <param name="indices"></param>
+        /// <returns></returns>
         public VectorScatterRef<TMathNetVec, TConcreteVec> @ref(IEnumerable<double> indices)
         {
             return new VectorScatterRef<TMathNetVec, TConcreteVec>(this, indices);

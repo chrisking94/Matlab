@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace Matlab.Utils
 {
+    /// <summary>
+    /// Reference to a vector item.
+    /// </summary>
+    /// <typeparam name="TMathNetVec"></typeparam>
+    /// <typeparam name="TConcreteVec"></typeparam>
     public struct VectorPointRef<TMathNetVec, TConcreteVec> 
         where TMathNetVec : Vector<double>
         where TConcreteVec : VectorBase<TMathNetVec, TConcreteVec>

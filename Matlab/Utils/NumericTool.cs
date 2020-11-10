@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Matlab.Utils
 {
+    /// <summary>
+    /// Some tools for operating <see cref="double"/>.
+    /// </summary>
     public static class NumericTool
     {
         public static bool IsInteger(double d)

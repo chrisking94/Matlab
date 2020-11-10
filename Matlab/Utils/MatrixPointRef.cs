@@ -8,6 +8,9 @@ using Matlab.Core;
 
 namespace Matlab.Utils
 {
+    /// <summary>
+    /// Reference to a matrix point.
+    /// </summary>
     public struct MatrixPointRef
     {
         public double Val
