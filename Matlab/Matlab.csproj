@@ -2,7 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Chris</Authors>
+    <Description>Provide vector and matrix operations of MATLAB in C# way.</Description>
+    <Copyright>Copyright (c) Chris 2020</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/chrisking94/Matlab</PackageProjectUrl>
+    <PackageIcon>icon_matlab.png</PackageIcon>
+    <PackageTags>MATLAB, Transplanting, Matrix, Vector</PackageTags>
+    <PackageReleaseNotes>First edition. There is still much work to do. Wellcome to contribute.</PackageReleaseNotes>
+    <PackageId>Matlab.ToolKit</PackageId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="icon_matlab.png" />
+    <None Remove="Matlab.nuspec" />
+    <None Include="icon_matlab.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.12.0" />

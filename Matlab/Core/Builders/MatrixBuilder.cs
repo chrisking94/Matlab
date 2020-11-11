@@ -22,6 +22,11 @@ namespace Matlab.Core.Builders
             return new Matrix(Matrix<double>.Build.DenseOfColumnArrays(vs));
         }
 
+        public Matrix DenseOfRowArrays(params double[][] vs)
+        {
+            return new Matrix(Matrix<double>.Build.DenseOfRowArrays(vs));
+        }
+
         public Matrix Dense(int m, int n)
         {
             return new Matrix(Matrix<double>.Build.Dense(m, n));

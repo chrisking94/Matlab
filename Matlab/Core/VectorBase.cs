@@ -3,6 +3,7 @@ using Matlab.Core.Builders;
 using Matlab.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -145,6 +146,20 @@ namespace Matlab.Core
         public static TConcreteVec operator %(double value, VectorBase<TMathNetVec, TConcreteVec> vec1)
         {
             return vec1.build.CreateMatlabVector(value % vec1.vec);
+        }
+
+        public bool Equals(IEnumerable<double> other)
+        {
+            var otherList = other.ToList();
+            if (otherList.Count == this.vec.Count)
+            {
+                for (var i = 0; i < this.vec.Count; ++i)
+                {
+                    if (this.vec[i] != otherList[i]) return false;
+                }
+                return true;
+            }
+            return false;
         }
         #endregion
 
